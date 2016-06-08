@@ -1706,33 +1706,37 @@ void xio_session_post_destroy(void *_session)
 /*---------------------------------------------------------------------------*/
 int xio_session_destroy(struct xio_session *session)
 {
+	struct xio_context *ctx;
+
 	if (!session)
 		return 0;
 
+	ctx = session->teardown_work_ctx;
+
 #ifdef XIO_THREAD_SAFE_DEBUG
-	if (session->teardown_work_ctx)
+	if (ctx)
 		/* not locking if the session did not contain active conn */
-		xio_ctx_debug_thread_lock(session->teardown_work_ctx);
+		xio_ctx_debug_thread_lock(ctx);
 #endif
 
 	TRACE_LOG("xio_post_destroy_session seesion:%p\n", session);
 
-	if (session->teardown_work_ctx &&
-	    xio_ctx_is_work_in_handler(session->teardown_work_ctx,
+	if (ctx &&
+	    xio_ctx_is_work_in_handler(ctx,
 				       &session->teardown_work)) {
-		xio_context_unreg_observer(session->teardown_work_ctx,
+		xio_context_unreg_observer(ctx,
 					   &session->ctx_observer);
 
-		xio_ctx_set_work_destructor(
-		     session->teardown_work_ctx, session,
-		     xio_session_post_destroy,
-		     &session->teardown_work);
+		xio_ctx_set_work_destructor(ctx,
+					    session,
+					    xio_session_post_destroy,
+					    &session->teardown_work);
 	} else {
 		xio_session_post_destroy(session);
 	}
 #ifdef XIO_THREAD_SAFE_DEBUG
-	if (session->teardown_work_ctx)
-		xio_ctx_debug_thread_unlock(session->teardown_work_ctx);
+	if (ctx)
+		xio_ctx_debug_thread_unlock(ctx);
 #endif
 
 	return 0;
@@ -1984,4 +1988,3 @@ void xio_session_init_teardown(struct xio_session *session,
 				xio_session_pre_teardown,
 				&session->teardown_work);
 }
-
