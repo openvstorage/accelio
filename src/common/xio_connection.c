@@ -2337,15 +2337,24 @@ int xio_connection_destroy(struct xio_connection *connection)
 	int			retval = 0;
 	int			found;
 	struct xio_session	*session;
+	struct xio_context	*ctx;
+#ifdef XIO_THREAD_SAFE_DEBUG
+	int			ctx_locked = 0;
+#endif
 
 	if (!connection) {
 		xio_set_error(EINVAL);
 		return -1;
 	}
+
+	ctx = connection->ctx;
+
 #ifdef XIO_THREAD_SAFE_DEBUG
-	if (connection != connection->session->lead_connection)
+	if (connection != connection->session->lead_connection) {
 		/*not locking for inner accelio lead connection */
-		xio_ctx_debug_thread_lock(connection->ctx);
+		xio_ctx_debug_thread_lock(ctx);
+		ctx_locked = 1;
+	}
 #endif
 	found = xio_idr_lookup_uobj(usr_idr, connection);
 	if (found) {
@@ -2358,7 +2367,7 @@ int xio_connection_destroy(struct xio_connection *connection)
 		xio_set_error(XIO_E_USER_OBJ_NOT_FOUND);
 #ifdef XIO_THREAD_SAFE_DEBUG
 		if (connection != connection->session->lead_connection)
-			xio_ctx_debug_thread_unlock(connection->ctx);
+			xio_ctx_debug_thread_unlock(ctx);
 #endif
 		return -1;
 	}
@@ -2387,28 +2396,28 @@ int xio_connection_destroy(struct xio_connection *connection)
 		xio_set_error(EPERM);
 #ifdef XIO_THREAD_SAFE_DEBUG
 		if (connection != connection->session->lead_connection)
-			xio_ctx_debug_thread_unlock(connection->ctx);
+			xio_ctx_debug_thread_unlock(ctx);
 #endif
 		return -1;
 	}
 	/* if there is any delayed timeout -  stop it.
 	 * users may call this function at any stage
 	 **/
-	xio_ctx_del_work(connection->ctx, &connection->hello_work);
-	xio_ctx_del_work(connection->ctx, &connection->fin_work);
-	xio_ctx_del_work(connection->ctx, &connection->teardown_work);
+	xio_ctx_del_work(ctx, &connection->hello_work);
+	xio_ctx_del_work(ctx, &connection->fin_work);
+	xio_ctx_del_work(ctx, &connection->teardown_work);
 
-	xio_ctx_del_delayed_work(connection->ctx,
+	xio_ctx_del_delayed_work(ctx,
 				 &connection->fin_delayed_work);
-	xio_ctx_del_delayed_work(connection->ctx,
+	xio_ctx_del_delayed_work(ctx,
 				 &connection->fin_timeout_work);
-	xio_ctx_del_delayed_work(connection->ctx,
+	xio_ctx_del_delayed_work(ctx,
 				 &connection->ka.timer);
 
 	kref_put(&connection->kref, xio_connection_post_destroy);
 #ifdef XIO_THREAD_SAFE_DEBUG
-	if (connection != connection->session->lead_connection)
-		xio_ctx_debug_thread_unlock(connection->ctx);
+	if (ctx_locked)
+		xio_ctx_debug_thread_unlock(ctx);
 #endif
 
 	return retval;
@@ -3320,4 +3329,3 @@ void xio_connection_keepalive_start(void *_connection)
 		return;
 	}
 }
-
