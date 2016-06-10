@@ -346,32 +346,39 @@ int xio_ev_loop_is_pending_event(struct xio_ev_data *evt)
 /*---------------------------------------------------------------------------*/
 static int xio_ev_loop_exec_scheduled(struct xio_ev_loop *loop)
 {
-	struct list_head	*last_sched;
-	struct list_head	*events_list_entry;
-	struct xio_ev_data	*tev, *tevn;
-	xio_event_handler_t	event_handler;
-	void			*event_data;
+	struct list_head work;
+	struct xio_ev_data *tev;
+#ifndef NDEBUG
+	struct xio_ev_data *prev = NULL;
+#endif
 	int work_remains = 0;
 
 	if (!list_empty(&loop->events_list)) {
 		/* execute only work scheduled till now */
-		last_sched = loop->events_list.prev;
-		list_for_each_entry_safe(tev, tevn, &loop->events_list,
-					 events_list_entry) {
+		list_replace_init(&loop->events_list,
+				  &work);
+
+		/*
+		 * don't use list_for_each_entry_safe as event handlers
+		 * might modify the list behind our back (e.g. by invoking
+		 * xio_ev_loop_remove_event via xio_context_disable_event)
+		 */
+		while (!list_empty(&work)) {
+			tev = list_first_entry(&work,
+					       struct xio_ev_data,
+					       events_list_entry);
+			assert(prev != tev);
+			assert(tev->scheduled);
+#ifndef NDEBUG
+			prev = tev;
+#endif
 			xio_ev_loop_remove_event(tev);
-			/* copy the relevant fields tev can be freed in
-			 * callback
-			 */
-			event_handler		= tev->handler;
-			event_data		= tev->data;
-			events_list_entry	= &tev->events_list_entry;
-			event_handler(event_data);
-			if (events_list_entry == last_sched)
-				break;
+			tev->handler(tev->data);
 		}
-		if (!list_empty(&loop->events_list))
-			work_remains = 1;
+
+		work_remains = !list_empty(&loop->events_list);
 	}
+
 	return work_remains;
 }
 
@@ -618,4 +625,3 @@ void xio_ev_loop_reset_stop(void *loop_hndl)
 	loop->stop_loop = 0;
 	loop->wakeup_armed = 0;
 }
-
