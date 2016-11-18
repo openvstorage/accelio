@@ -5,6 +5,7 @@ Maintainer: Chrysostomos Nanakos <cnanakos@debian.org>
 Build-Depends: debhelper (>= 9),
  dh-autoreconf,
  pkg-config,
+ libibverbs-dev,
  librdmacm-dev,
  libnuma-dev,
  libaio-dev
