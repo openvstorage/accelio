@@ -1,3 +1,9 @@
+accelio (1.7-2ovs1) UNRELEASED; urgency=medium
+
+  * Increase listen backlog to default value predating iWARP support 
+
+ -- Arne Redlich <arne.redlich@openvstorage.com>  Fri, 18 Nov 2016 16:37:22 +0100
+
 accelio (1.7-2) unstable; urgency=high
 
   * Build only on amd64 architecture
