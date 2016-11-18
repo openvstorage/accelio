@@ -1,0 +1,43 @@
+Description: Fix misleading indentation error
+Author: Chrysostomos Nanakos <cnanakos@debian.org>
+
+--- accelio-1.5.orig/benchmarks/usr/xio_perftest/xio_perftest_parameters.c
++++ accelio-1.5/benchmarks/usr/xio_perftest/xio_perftest_parameters.c
+@@ -522,14 +522,16 @@ invalid_cmdline:
+ void print_test_info(const struct perf_parameters *user_param)
+ {
+ 	printf(" =============================================\n");
+-	if (user_param->server_addr)
++	if (user_param->server_addr) {
+ 		printf(" Server Address		: %s\n",
+ 		       user_param->server_addr);
+-	if (user_param->intf_name)
++    }
++	if (user_param->intf_name) {
+ 		printf(" Local Interface	: %s\n",
+ 		       user_param->intf_name);
+ 		printf(" Server Port		: %d\n",
+ 	       user_param->server_port);
++    }
+ 	printf(" Transport Type		: %s\n",
+ 	       user_param->transport);
+ 	printf(" Test Type		: %s\n",
+--- accelio-1.5.orig/tests/portable/direct_rdma_test/xio_rdma_common.c
++++ accelio-1.5/tests/portable/direct_rdma_test/xio_rdma_common.c
+@@ -245,7 +245,7 @@ void init_xio_rdma_common_test(void)
+ 	int res;
+ 
+ 	enum xio_log_level xio_log_level = XIO_LOG_LEVEL_TRACE;
+-if(0)
++if(0) {
+ 	xio_set_opt(NULL, XIO_OPTLEVEL_ACCELIO, XIO_OPTNAME_LOG_LEVEL,
+ 		    &xio_log_level, sizeof(xio_log_level));
+ 
+@@ -255,6 +255,7 @@ if(0)
+ 	res = xio_mem_alloc(RDMA_BUF_SIZE, &rdma_reg_mem);
+ 	xio_assert(!res);
+ 	memset(rdma_reg_mem.addr, 0, rdma_reg_mem.length);
++    }
+ }
+ 
+ void fini_xio_rdma_common_test(void)

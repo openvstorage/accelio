@@ -1,1 +1,6 @@
-usr/include/*
+usr/include/xio_user.h
+usr/include/xio_base.h
+usr/include/xio_predefs.h
+usr/include/libxio.h
+usr/lib/*/libxio.a
+usr/lib/*/libxio.so

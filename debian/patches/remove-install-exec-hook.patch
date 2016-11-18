@@ -1,0 +1,27 @@
+Description: Remove install-exec-hook
+Author: Chrysostomos Nanakos <cnanakos@debian.org>
+
+diff --git a/src/usr/Makefile.am b/src/usr/Makefile.am
+index 96620a6..12f0a02 100644
+--- a/src/usr/Makefile.am
++++ b/src/usr/Makefile.am
+@@ -35,19 +35,6 @@ else
+     libxio_version_script =
+ endif
+ 
+-install-exec-hook:
+-	@runner=`whoami` ; \
+-        if test $$runner != "root" ; \
+-	then \
+-		echo "You are not root. run the following manualy:"; \
+-		echo "echo \"$(libdir)\" > /etc/ld.so.conf.d/libxio.conf"; \
+-		echo "/sbin/ldconfig"; \
+-	else \
+-		echo "You are root" ; \
+-		echo "$(libdir)" > $(DESTDIR)/etc/ld.so.conf.d/libxio.conf ; \
+-		/sbin/ldconfig; \
+-	fi
+-
+ ###############################################################################
+ # THE LIBRARIES TO BUILD
+ ###############################################################################

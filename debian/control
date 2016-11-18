@@ -1,40 +1,58 @@
-Source: libxio
-Maintainer: Katya Katsenelenbogen <katyak@mellanox.com>
-Uploaders: Roi Dayan <roid@mellanox.com>
-Section: net
+Source: accelio
+Section: libs
 Priority: optional
-Standards-Version: 3.9.1
-Build-Depends:  debhelper (>= 8),
-                dpkg-dev (>= 1.13.19),
-                librdmacm-dev,
-                libibverbs-dev
-Homepage: http://accelio.org/
-Vcs-Git: git://github.com/accelio/accelio
-Vcs-Browser: https://github.com/accelio/accelio
+Maintainer: Chrysostomos Nanakos <cnanakos@debian.org>
+Build-Depends: debhelper (>= 9),
+ dh-autoreconf,
+ pkg-config,
+ librdmacm-dev,
+ libnuma-dev,
+ libaio-dev
+Standards-Version: 3.9.8
+#Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/accelio.git
+#Vcs-Git: git://anonscm.debian.org/collab-maint/accelio.git
+Homepage: http://www.accelio.org/
 
-Package: libxio
-Architecture: any
-Depends:    librdmacm1,
-            libibverbs1
-            ${misc:Depends},
-            ${shlibs:Depends},
-Description: Open-Source IO, Message, and RPC Acceleration Library
+Package: libxio0
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ librdmacm1 (>= 1.0.21-1),
+ libibverbs1 (>= 1.1.8-1.1),
+ libnuma1 (>= 2.0.11-1),
+ libaio1 (>= 0.3.110-2)
+Pre-Depends: ${misc:Pre-Depends}
+Multi-Arch: same
+Description: IO, Message, and RPC Acceleration Library (shared library)
  Accelio provides an easy-to-use, reliable, scalable, and high performance
  data/message delivery middleware that maximizes the efficiency of modern CPU
- and NIC hardware and that reduces time-to-market of new scale-out applications.
+ and NIC hardware and that reduces time-to-market of new scale-out
+ applications.
+ .
+ This package contains the libxio shared library.
 
 Package: libxio-dev
+Architecture: amd64
 Section: libdevel
-Architecture: any
-Depends:    libxio(= ${binary:Version}),
-            librdmacm-dev,
-            libibverbs-dev
-            ${misc:Depends},
-            ${shlibs:Depends},
-Description: Open-Source IO, Message, and RPC Acceleration Library
+Depends: libxio0 (= ${binary:Version}), ${misc:Depends}
+Multi-Arch: same
+Description: IO, Message, and RPC Acceleration Library (development files)
  Accelio provides an easy-to-use, reliable, scalable, and high performance
  data/message delivery middleware that maximizes the efficiency of modern CPU
- and NIC hardware and that reduces time-to-market of new scale-out applications.
+ and NIC hardware and that reduces time-to-market of new scale-out
+ applications.
  .
- This package contains development files needed for building applications that
- link against libxio.
+ This package contains the Accelio development libraries and header files.
+
+Package: libxio0-dbg
+Architecture: amd64
+Priority: extra
+Section: debug
+Depends: libxio0 (= ${binary:Version}), ${misc:Depends}
+Multi-Arch: same
+Description: IO, Message, and RPC Acceleration Library (debugging symbols)
+ Accelio provides an easy-to-use, reliable, scalable, and high performance
+ data/message delivery middleware that maximizes the efficiency of modern CPU
+ and NIC hardware and that reduces time-to-market of new scale-out
+ applications.
+ .
+ This package contains the debugging symbols for the Accelio library.
