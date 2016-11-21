@@ -1,6 +1,12 @@
+accelio (1.7-2ovs2) UNRELEASED; urgency=medium
+
+  * Drop version numbers from librdmacm1, libibverbs1, libnuma1 and libaio1 deps
+
+ -- Arne Redlich <arne.redlich@openvstorage.com>  Mon, 21 Nov 2016 11:04:21 +0100
+
 accelio (1.7-2ovs1) UNRELEASED; urgency=medium
 
-  * Increase listen backlog to default value predating iWARP support 
+  * Increase listen backlog to default value predating iWARP support
 
  -- Arne Redlich <arne.redlich@openvstorage.com>  Fri, 18 Nov 2016 16:37:22 +0100
 

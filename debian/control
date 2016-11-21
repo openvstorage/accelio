@@ -17,10 +17,10 @@ Homepage: http://www.accelio.org/
 Package: libxio0
 Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends},
- librdmacm1 (>= 1.0.21-1),
- libibverbs1 (>= 1.1.8-1.1),
- libnuma1 (>= 2.0.11-1),
- libaio1 (>= 0.3.110-2)
+ librdmacm1,
+ libibverbs1,
+ libnuma1,
+ libaio1
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
 Description: IO, Message, and RPC Acceleration Library (shared library)
