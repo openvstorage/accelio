@@ -1,3 +1,10 @@
+accelio (1.7-2ovs3) UNRELEASED; urgency=medium
+
+  * tcp transport was not closed properly upon connection refusal,resulted
+    in socket fd leakage
+
+ -- Chrysostomos Nanakos <cnanakos@openvstorage.com>  Fri, 30 Dec 2016 17:04:21 +0100
+
 accelio (1.7-2ovs2) UNRELEASED; urgency=medium
 
   * Drop version numbers from librdmacm1, libibverbs1, libnuma1 and libaio1 deps
