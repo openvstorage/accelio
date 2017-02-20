@@ -1,3 +1,9 @@
+accelio (1.7-2ovs4) UNRELEASED; urgency=medium
+
+  * Enable TCP keepalive
+
+ -- Chrysostomos Nanakos <cnanakos@openvstorage.com>  Mon, 20 Feb 2017 16:53:40 +0100
+
 accelio (1.7-2ovs3) UNRELEASED; urgency=medium
 
   * tcp transport was not closed properly upon connection refusal,resulted
