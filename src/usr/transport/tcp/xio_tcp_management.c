@@ -766,6 +766,57 @@ int xio_tcp_socket_create(void)
 		goto cleanup;
 	}
 
+    if (g_options.enable_keepalive) {
+
+        optval = 1;
+        retval = setsockopt(sock_fd,
+                            SOL_SOCKET,
+                            SO_KEEPALIVE,
+                            &optval,
+                            sizeof(int));
+        if (retval) {
+            xio_set_error(xio_get_last_socket_error());
+            ERROR_LOG("setsockopt failed. (errno=%d %m)\n",
+                  xio_get_last_socket_error());
+            goto cleanup;
+        }
+
+        retval = setsockopt(sock_fd,
+                            IPPROTO_TCP,
+                            TCP_KEEPINTVL,
+                            &g_options.ka.intvl,
+                            sizeof(int));
+        if (retval) {
+            xio_set_error(xio_get_last_socket_error());
+            ERROR_LOG("setsockopt failed. (errno=%d %m)\n",
+                  xio_get_last_socket_error());
+            goto cleanup;
+        }
+
+        retval = setsockopt(sock_fd,
+                            IPPROTO_TCP,
+                            TCP_KEEPCNT,
+                            &g_options.ka.probes,
+                            sizeof(int));
+        if (retval) {
+            xio_set_error(xio_get_last_socket_error());
+            ERROR_LOG("setsockopt failed. (errno=%d %m)\n",
+                  xio_get_last_socket_error());
+            goto cleanup;
+        }
+
+        retval = setsockopt(sock_fd,
+                            IPPROTO_TCP,
+                            TCP_KEEPIDLE,
+                            &g_options.ka.time,
+                            sizeof(int));
+        if (retval) {
+            xio_set_error(xio_get_last_socket_error());
+            ERROR_LOG("setsockopt failed. (errno=%d %m)\n",
+                  xio_get_last_socket_error());
+            goto cleanup;
+        }
+    }
 	return sock_fd;
 
 cleanup:
