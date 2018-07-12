@@ -115,7 +115,7 @@ failed_huge_page:
 /*---------------------------------------------------------------------------*/
 /* free_mem_buf								     */
 /*---------------------------------------------------------------------------*/
-inline void free_mem_buf(uint8_t *pool_buf, int shmid)
+static inline void free_mem_buf(uint8_t *pool_buf, int shmid)
 {
 	if (shmid >= 0) {
 		if (shmdt(pool_buf) != 0) {
@@ -233,4 +233,3 @@ void  xio_buf_free(struct perf_buf *pbuf)
 
 	free(pbuf);
 }
-

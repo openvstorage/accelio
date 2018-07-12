@@ -117,7 +117,7 @@ failed_huge_page:
 /*---------------------------------------------------------------------------*/
 /* free_mem_buf								     */
 /*---------------------------------------------------------------------------*/
-inline void free_mem_buf(void *pool_buf, int shmid)
+static inline void free_mem_buf(void *pool_buf, int shmid)
 {
 	if (shmid >= 0) {
 		if (shmdt(pool_buf) != 0) {
@@ -342,4 +342,3 @@ inline void msg_pool_free(struct msg_pool *pool)
 	if (pool)
 		free(pool);
 }
-
