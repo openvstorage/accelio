@@ -278,6 +278,8 @@ struct xio_transport {
 			 struct xio_transport_attr *attr,
 			 int attr_mask);
 
+	void	(*keepalive_timeout)(struct xio_transport_base *trans_hndl);
+
 	struct list_head transports_list_entry;
 };
 
