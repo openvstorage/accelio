@@ -2636,6 +2636,24 @@ static int xio_tcp_dup2(struct xio_transport_base *old_trans_hndl,
 }
 
 /*---------------------------------------------------------------------------*/
+/* xio_tcp_keepalive_timeout                                                 */
+/*---------------------------------------------------------------------------*/
+static void xio_tcp_keepalive_timeout(struct xio_transport_base *trans_hndl)
+{
+	struct xio_tcp_transport *tcp_hndl =
+		(struct xio_tcp_transport *)trans_hndl;
+
+	xio_context_disable_event(&tcp_hndl->flush_tx_event);
+	xio_context_disable_event(&tcp_hndl->ctl_rx_event);
+
+	if (tcp_hndl->sock.ops->del_ev_handlers)
+		tcp_hndl->sock.ops->del_ev_handlers(tcp_hndl);
+
+	xio_transport_notify_observer_error(trans_hndl,
+					    XIO_E_TIMEOUT);
+}
+
+/*---------------------------------------------------------------------------*/
 static void init_single_sock_ops(void)
 {
 	single_sock_ops.open = xio_tcp_single_sock_create;
@@ -2691,6 +2709,8 @@ static void init_xio_tcp_transport(void)
 	xio_tcp_transport.get_opt = xio_tcp_get_opt;
 	xio_tcp_transport.cancel_req = xio_tcp_cancel_req;
 	xio_tcp_transport.cancel_rsp = xio_tcp_cancel_rsp;
+	xio_tcp_transport.keepalive_timeout = xio_tcp_keepalive_timeout;
+
 	xio_tcp_transport.get_pools_setup_ops = xio_tcp_get_pools_ops;
 	xio_tcp_transport.set_pools_cls = xio_tcp_set_pools_cls;
 
