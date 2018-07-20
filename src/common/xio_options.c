@@ -214,7 +214,7 @@ static int xio_general_set_opt(void *xio_obj, int optname,
 	case XIO_OPTNAME_SND_QUEUE_DEPTH_MSGS:
 		if (*((int *)optval) < 1)
 			break;
-		g_options.snd_queue_depth_msgs = (int)*((uint64_t *)optval);
+		g_options.snd_queue_depth_msgs = *((int *)optval);
 		return 0;
 	case XIO_OPTNAME_RCV_QUEUE_DEPTH_MSGS:
 		if (*((int *)optval) < 1)
