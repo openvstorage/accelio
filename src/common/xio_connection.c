@@ -3271,9 +3271,14 @@ void xio_connection_keepalive_intvl(void *_connection)
 			ERROR_LOG("periodic keepalive failed - abort\n");
 			return;
 		}
+
+		/* notify the transport via the nexus */
+		xio_nexus_keepalive_timeout(connection->nexus);
+
 		/* notify the application of connection error */
 		xio_session_notify_connection_error(
 				connection->session, connection, XIO_E_TIMEOUT);
+
 		if ((!connection->disconnecting) && (!g_options.reconnect))
 			xio_disconnect(connection);
 		return;
@@ -3340,4 +3345,3 @@ void xio_connection_keepalive_start(void *_connection)
 		return;
 	}
 }
-

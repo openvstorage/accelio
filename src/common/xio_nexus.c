@@ -2686,3 +2686,14 @@ void xio_nexus_set_server(struct xio_nexus *nexus, struct xio_server *server)
 	if (server)
 		xio_server_reg_observer(server, &nexus->srv_observer);
 }
+
+/*---------------------------------------------------------------------------*/
+/* xio_nexus_keepalive_timeout						     */
+/*---------------------------------------------------------------------------*/
+void xio_nexus_keepalive_timeout(struct xio_nexus *nexus)
+{
+	if (nexus->transport->keepalive_timeout)
+		nexus->transport->keepalive_timeout(nexus->transport_hndl);
+	else
+		ERROR_LOG("transport cannot be notified of keepalive timeout");
+}

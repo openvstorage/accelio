@@ -1271,8 +1271,9 @@ int xio_on_nexus_error(struct xio_session *session, struct xio_nexus *nexus,
 		break;
 	default:
 		connection = xio_session_find_connection(session, nexus);
-		xio_connection_error_event(connection,
-					   event_data->error.reason);
+		if (connection)
+			xio_connection_error_event(connection,
+						   event_data->error.reason);
 		break;
 	}
 
@@ -2083,4 +2084,3 @@ void xio_session_init_teardown(struct xio_session *session,
 				xio_session_pre_teardown,
 				&session->teardown_work);
 }
-
