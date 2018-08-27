@@ -1,3 +1,11 @@
+accelio (1.7-2ovs5) UNRELEASED; urgency=medium
+
+  * Fix TCP keepalive
+  * Fix link error when building tests
+  * Fix xio_general_set_opt(XIO_OPTNAME_SND_QUEUE_DEPTH_MSGS) implementation
+
+ -- Arne Redlich <arne.redlich@openvstorage.com>  Mon, 27 Aug 2018 09:21:27 +0200
+
 accelio (1.7-2ovs4) UNRELEASED; urgency=medium
 
   * Enable TCP keepalive
