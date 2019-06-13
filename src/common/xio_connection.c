@@ -1170,6 +1170,8 @@ int xio_send_response(struct xio_msg *msg)
 		      (connection->state != XIO_CONNECTION_STATE_ONLINE &&
 		       connection->state != XIO_CONNECTION_STATE_ESTABLISHED &&
 		       connection->state != XIO_CONNECTION_STATE_INIT))) {
+			struct xio_msg *next = pmsg->next;
+
 			/* we discard the response as connection is not active
 			 * anymore
 			 */
@@ -1180,18 +1182,20 @@ int xio_send_response(struct xio_msg *msg)
 						     XIO_E_MSG_DISCARDED,
 						     XIO_MSG_DIRECTION_OUT);
 
-			pmsg = pmsg->next;
+			pmsg = next;
+			connection = NULL;
 			continue;
 		}
 		if (task->state != XIO_TASK_STATE_DELIVERED &&
 		    task->state != XIO_TASK_STATE_READ) {
+			struct xio_msg *next = pmsg->next;
 			ERROR_LOG("duplicate response send. request sn:%llu\n",
 				  task->imsg.sn);
 
 			xio_session_notify_msg_error(connection, pmsg,
 						     XIO_E_MSG_INVALID,
 						     XIO_MSG_DIRECTION_OUT);
-			pmsg = pmsg->next;
+			pmsg = next;
 			continue;
 		}
 #ifdef XIO_CFLAG_STAT_COUNTERS
