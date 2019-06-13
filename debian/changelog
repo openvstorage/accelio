@@ -1,3 +1,9 @@
+accelio (1.7-2ovs6) UNRELEASED; urgency=medium
+
+  * Cherry pick changeset to initialize variable in xio_nexus_on_assign_in_buf
+
+ -- Arne Redlich <arne.redlich@openvstorage.com>  Thu, 13 Jun 2019 10:08:32 +0200
+
 accelio (1.7-2ovs5) UNRELEASED; urgency=medium
 
   * Fix TCP keepalive
